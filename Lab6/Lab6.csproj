@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>12c4bd1e-2513-4f21-9afa-f21ff27365d0</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +21,10 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DAL\DAL.csproj" />
     </ItemGroup>
 
 </Project>
