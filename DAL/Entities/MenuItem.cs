@@ -4,7 +4,7 @@ public class MenuItem : BaseEntity
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public Decimal Price { get; set; }
+    public decimal Price { get; set; }
     public string ImageUrl { get; set; }
     public int CategoryId { get; set; }
     public int MenuId { get; set; }
