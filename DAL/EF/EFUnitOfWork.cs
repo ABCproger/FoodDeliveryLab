@@ -9,8 +9,8 @@ public class EFUnitOfWork : IUnitOfWork
 {
     private readonly BaseDbContext _dbContext;
     private MenuRepository _menuRepository;
-    private MenuItemRepository _mealRepository;
-    private CategoryRepository _menuMealRepository;
+    private MenuItemRepository _menuItemRepository;
+    private CategoryRepository _categoryRepository;
 
     public EFUnitOfWork(BaseDbContext dbContext)
     {
@@ -34,11 +34,11 @@ public class EFUnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_mealRepository == null)
+            if (_menuItemRepository == null)
             {
-                _mealRepository = new MenuItemRepository(_dbContext);
+                _menuItemRepository = new MenuItemRepository(_dbContext);
             }
-            return _mealRepository;
+            return _menuItemRepository;
         }
     }
 
@@ -46,11 +46,11 @@ public class EFUnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_menuMealRepository == null)
+            if (_categoryRepository == null)
             {
-                _menuMealRepository = new CategoryRepository(_dbContext);
+                _categoryRepository = new CategoryRepository(_dbContext);
             }
-            return _menuMealRepository;
+            return _categoryRepository;
         }
     }
 
