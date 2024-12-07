@@ -1,11 +1,9 @@
-using Xunit;
-using Moq;
-
 namespace DAL.Tests;
 
 using EF;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 public class BaseRepositoryUnitTests
 {
@@ -18,13 +16,13 @@ public class BaseRepositoryUnitTests
         var mockDbSet = new Mock<DbSet<Menu>>();
         mockContext.Setup(context => context.Set<Menu>()).Returns(mockDbSet.Object);
         var repository = new TestMenuRepository(mockContext.Object);
-        var expectedMeal = new Mock<Menu>().Object;
+        var expectedMenu = new Mock<Menu>().Object;
 
         // Act
-        await repository.CreateAsync(expectedMeal);
-
+        await repository.CreateAsync(expectedMenu);
+    
         // Assert
-        mockDbSet.Verify(dbSet => dbSet.AddAsync(expectedMeal, It.IsAny<CancellationToken>()), Times.Once());
+        mockDbSet.Verify(dbSet => dbSet.AddAsync(expectedMenu, It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
@@ -51,5 +49,28 @@ public class BaseRepositoryUnitTests
         Assert.Equal(expectedMenu.Name, result.Name);
         Assert.Empty(result.MenuItems);
     }
+    
+    [Fact]
+    public async Task Delete_InputMenuId_CallsRemoveMethodOfDbSetWithMenuInstance()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<BaseDbContext>().Options;
+        var mockContext = new Mock<BaseDbContext>(options);
+        var mockDbSet = new Mock<DbSet<Menu>>();
 
+        var menuToDelete = new Menu { Id = 1, Name = "Menu to Delete", MenuItems = new List<MenuItem>() };
+
+        // Setup FindAsync to return the menu instance
+        mockDbSet.Setup(m => m.FindAsync(1)).ReturnsAsync(menuToDelete);
+        mockContext.Setup(context => context.Set<Menu>()).Returns(mockDbSet.Object);
+
+        var repository = new TestMenuRepository(mockContext.Object);
+
+        // Act
+        await repository.DeleteAsync(1);
+
+        // Assert
+        mockDbSet.Verify(dbSet => dbSet.Remove(menuToDelete), Times.Once());
+        mockContext.Verify(context => context.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+    }
 }
