@@ -1,6 +1,9 @@
+using BLL.Services.Implementation;
+using BLL.Services.Interfaces;
 using DAL.EF;
 using DAL.Repositories.Implementation;
 using DAL.Repositories.Interfaces;
+using DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +20,12 @@ builder.Services.AddDbContext<BaseDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => { b.MigrationsAssembly("Lab6"); });
 });
+builder.Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+
+builder.Services.AddScoped<IMenuService, MenuService>();
 
 var app = builder.Build();
 
