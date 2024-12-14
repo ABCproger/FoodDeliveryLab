@@ -35,7 +35,7 @@ namespace Lab6.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.Menu", b =>
@@ -52,7 +52,7 @@ namespace Lab6.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.MenuItem", b =>
@@ -93,7 +93,7 @@ namespace Lab6.Migrations
 
                     b.HasIndex("MenuId");
 
-                    b.ToTable("MenuItems");
+                    b.ToTable("MenuItems", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.MenuItem", b =>

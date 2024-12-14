@@ -42,7 +42,7 @@ public class MenuController : ControllerBase
         try
         {
             await _menuService.CreateMenuAsync(request);
-            return CreatedAtAction(nameof(GetMenuById), new { menuId = request.MenuName }, request);
+            return Ok("Menu successfully created");
         }
         catch (ArgumentNullException ex)
         {
