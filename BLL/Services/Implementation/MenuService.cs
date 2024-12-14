@@ -1,5 +1,6 @@
 namespace BLL.Services.Implementation;
 
+using DAL.Entities;
 using DAL.UnitOfWork;
 using DTO.Menu;
 using Interfaces;
@@ -50,6 +51,49 @@ public class MenuService : IMenuService
         catch (Exception e)
         {
             _logger.LogError(e, $"Error occurred while fetching menu with ID {menuId}.");
+            throw;
+        }
+    }
+    public async Task CreateMenuAsync(CreateMenuRequestDTO request)
+    {
+        try
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            var menuEntity = new Menu
+            {
+                Name = request.MenuName
+            };
+
+            await _unitOfWork.Menus.CreateAsync(menuEntity);
+
+            if (request.MenuItems != null && request.MenuItems.Any())
+            {
+                var menuItems = request.MenuItems.Select(item => new MenuItem
+                {
+                    Name = item.MenuItemName,
+                    Description = item.Description,
+                    Price = item.Price,
+                    ImageUrl = item.ImageUrl,
+                    CategoryId = item.CategoryId,
+                    IsAvailable = item.IsAvailable,
+                    MenuId = menuEntity.Id
+                });
+
+                foreach (var menuItem in menuItems)
+                {
+                    await _unitOfWork.MenuItems.CreateAsync(menuItem);
+                }
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            _logger.LogInformation($"Menu '{menuEntity.Name}' successfully created with ID {menuEntity.Id}.");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error occurred while creating a new menu.");
             throw;
         }
     }

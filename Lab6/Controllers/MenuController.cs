@@ -1,5 +1,6 @@
 namespace Lab6.Controllers;
 
+using BLL.DTO.Menu;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,25 @@ public class MenuController : ControllerBase
         {
             _logger.LogError(ex, "An unexpected error occurred.");
             return StatusCode(500, new { message = "An error occurred while processing your request." });
+        }
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateMenu([FromBody] CreateMenuRequestDTO request)
+    {
+        try
+        {
+            await _menuService.CreateMenuAsync(request);
+            return CreatedAtAction(nameof(GetMenuById), new { menuId = request.MenuName }, request);
+        }
+        catch (ArgumentNullException ex)
+        {
+            _logger.LogWarning(ex.Message);
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred.");
+            return StatusCode(500, new { message = "An error occurred while creating the menu." });
         }
     }
 }

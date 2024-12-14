@@ -5,4 +5,5 @@ using DTO.Menu;
 public interface IMenuService
 {
     Task<GetMenuResponseDTO> GetMenuByIdAsync(int menuId);
+    Task CreateMenuAsync(CreateMenuRequestDTO request);
 }
